@@ -10,11 +10,11 @@ Class::Accessor::Class - simple class variable accessors
 
 =head1 VERSION
 
-version 0.10
+version 0.12
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.12';
 
 =head1 SYNOPSIS
 
@@ -101,23 +101,28 @@ sub mk_package_accessors {
  $accessor = Class->make_class_accessor($field);
 
 This method generates a subroutine reference which acts as an accessor for the
-named field.  (Actually, the field name is irrelevant; subsequent calls to this
-method with identical field names will produce distinct closures.  This
-behavior should be changed, but I don't see any rush.)
+named field. 
 
 =cut
 
-sub make_class_accessor {
-	my ($class, $field) = @_;
+{
+	my %accessor;
 
-	my $field_value;
+	sub make_class_accessor {
+		my ($class, $field) = @_;
 
-	return sub {
-		my $class = shift;
+		return $accessor{$class}{$field}
+			if $accessor{$class}{$field};
 
-		return @_
-			? ($field_value = $_[0])
-			:  $field_value;
+		my $field_value;
+
+		$accessor{$class}{$field} = sub {
+			my $class = shift;
+
+			return @_
+				? ($field_value = $_[0])
+				:  $field_value;
+		}
 	}
 }
 
