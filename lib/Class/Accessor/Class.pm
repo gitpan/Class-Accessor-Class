@@ -10,11 +10,13 @@ Class::Accessor::Class - simple class variable accessors
 
 =head1 VERSION
 
-version 0.12
+version 0.500
+
+ $Id: /my/cs/projects/claccl/trunk/lib/Class/Accessor/Class.pm 22307 2006-06-09T02:15:22.946387Z rjbs  $
 
 =cut
 
-our $VERSION = '0.12';
+our $VERSION = '0.500';
 
 =head1 SYNOPSIS
 
@@ -47,9 +49,11 @@ Class::Accessor::Class provides a simple way to create accessor and mutator
 methods for class variables, just as Class::Accessor provides for objects.  It
 can use either an enclosed lexical variable, or a package variable.
 
-This module is implemented as a subclass of Class::Accessor, and builds its
-implementation on some of Class::Accessor.  As a side benefit, a class that isa
-Class::Accessor::Class is also a Class::Accessor and can use its methods.
+This module was once implemented in terms of Class::Accessor, but changes to
+that module broke this relationship.  Class::Accessor::Class is still a
+subclass of Class::Accessor, strictly for historical reasons.  As a side
+benefit, a class that isa Class::Accessor::Class is also a Class::Accessor
+and can use its methods.
 
 =head1 METHODS
 
@@ -70,7 +74,11 @@ get or set a lexical variable to which the accessor is the only access.
 
 sub mk_class_accessors {
 	my ($self, @fields) = @_;
-	$self->_mk_accessors('make_class_accessor', @fields);
+
+  no strict 'refs';
+  for my $field (@fields) {
+    *{"${self}::$field"} = $self->make_class_accessor($field);
+  }
 }
 
 =head2 mk_package_accessors
@@ -82,7 +90,7 @@ sub mk_class_accessors {
  Foo->foo(10);
  my $obj = new Foo;
  print $obj->foo;   # 10
- print Foo::foo;    # 10
+ print $Foo::foo;    # 10
 
 This method adds accessors for the named class variables.  The accessor will
 get or set the named variable in the package's symbol table.
@@ -91,7 +99,11 @@ get or set the named variable in the package's symbol table.
 
 sub mk_package_accessors {
 	my ($self, @fields) = @_;
-	$self->_mk_accessors('make_package_accessor', @fields);
+
+  no strict 'refs';
+  for my $field (@fields) {
+    *{"${self}::$field"} = $self->make_package_accessor($field);
+  }
 }
 
 =head1 DETAILS
@@ -134,6 +146,9 @@ This method generates a subroutine reference which acts as an accessor for the
 named field, which is stored in the scalar named C<field> in C<Class>'s symbol
 table.
 
+This can be useful for dealing with legacy code, but using package variables is
+almost never a good idea for new code.  Use this with care.
+
 =cut
 
 sub make_package_accessor {
@@ -153,7 +168,7 @@ sub make_package_accessor {
 
 =head1 AUTHOR
 
-Ricardo Signes, C<< <rjbs@cpan.org> >>
+Ricardo SIGNES, C<< <rjbs@cpan.org> >>
 
 =head1 BUGS
 
@@ -164,7 +179,7 @@ notified of progress on your bug as I make changes.
 
 =head1 COPYRIGHT
 
-Copyright 2004 Ricardo Signes, All Rights Reserved.
+Copyright 2004-2006 Ricardo Signes, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
