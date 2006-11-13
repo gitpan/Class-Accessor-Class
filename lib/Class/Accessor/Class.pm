@@ -10,13 +10,13 @@ Class::Accessor::Class - simple class variable accessors
 
 =head1 VERSION
 
-version 0.500
+version 0.501
 
- $Id: /my/cs/projects/claccl/trunk/lib/Class/Accessor/Class.pm 22307 2006-06-09T02:15:22.946387Z rjbs  $
+ $Id: /my/cs/projects/claccl/trunk/lib/Class/Accessor/Class.pm 27922 2006-11-13T16:05:47.533928Z rjbs  $
 
 =cut
 
-our $VERSION = '0.500';
+our $VERSION = '0.501';
 
 =head1 SYNOPSIS
 
@@ -75,6 +75,7 @@ get or set a lexical variable to which the accessor is the only access.
 sub mk_class_accessors {
 	my ($self, @fields) = @_;
 
+  ## no critic (ProhibitNoStrict)
   no strict 'refs';
   for my $field (@fields) {
     *{"${self}::$field"} = $self->make_class_accessor($field);
@@ -100,6 +101,7 @@ get or set the named variable in the package's symbol table.
 sub mk_package_accessors {
 	my ($self, @fields) = @_;
 
+  ## no critic (ProhibitNoStrict)
   no strict 'refs';
   for my $field (@fields) {
     *{"${self}::$field"} = $self->make_package_accessor($field);
@@ -155,11 +157,12 @@ sub make_package_accessor {
 	my ($self, $field) = @_;
 	my $class = ref $self || $self;
 
-	no strict 'refs';
 	my $varname = "$class\:\:$field";
 	return sub {
 		my $class = shift;
 
+    ## no critic (ProhibitNoStrict)
+    no strict 'refs';
 		return @_
 			? (${$varname} = $_[0])
 			:  ${$varname}

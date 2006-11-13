@@ -9,4 +9,6 @@ t/pod.t
 t/basic.t
 t/duplicate.t
 t/package.t
+t/perl-critic.t
+LICENSE
 META.yml                                 Module meta-data (added by MakeMaker)
