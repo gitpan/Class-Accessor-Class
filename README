@@ -1,4 +1,13 @@
-README for Class-Accessor-Class
 
-Class::Accessor::Class makes it easy to give a class class-level
-accessor/mutator methods for class variables.  Class class class!
+
+This archive contains the distribution Class-Accessor-Class,
+version 0.502:
+
+  simple class variable accessors
+
+This software is copyright (c) 2004 by Ricardo SIGNES.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+
