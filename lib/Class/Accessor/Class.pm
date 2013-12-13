@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Class::Accessor::Class;
 {
-  $Class::Accessor::Class::VERSION = '0.502';
+  $Class::Accessor::Class::VERSION = '0.503';
 }
 use Class::Accessor 0.16 ();
 use parent 'Class::Accessor';
@@ -75,13 +75,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Class::Accessor::Class - simple class variable accessors
 
 =head1 VERSION
 
-version 0.502
+version 0.503
 
 =head1 SYNOPSIS
 
